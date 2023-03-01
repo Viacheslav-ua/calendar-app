@@ -8,6 +8,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 })
 export class CalendarComponent implements OnInit {
 
+  public activeDay?: Date
   constructor() { }
 
   ngOnInit(): void {

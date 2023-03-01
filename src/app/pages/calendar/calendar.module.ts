@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { AppointmentListModule } from 'src/app/view/appointment-list/appointment-list.module';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -21,6 +22,7 @@ import { AppointmentListModule } from 'src/app/view/appointment-list/appointment
     CommonModule,
     CalendarRoutingModule,
     AppointmentListModule,
+    FormsModule,
     MatDatepickerModule,
     MatFormFieldModule,
     MatButtonModule,

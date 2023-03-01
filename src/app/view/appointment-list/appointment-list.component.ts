@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogAddUiComponent } from './dialog-add-ui/dialog-add-ui.component';
@@ -8,10 +8,10 @@ export interface DialogData {
   appointment: string;
 }
 
-export interface Appointments {
-  date: Date;
-  appointment: string;
-}
+// export interface Appointments {
+//   date: Date;
+//   appointment: string;
+// }
 
 @Component({
   selector: 'app-appointment-list',
@@ -37,7 +37,10 @@ export class AppointmentListComponent{
     return arr
   }
 
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
+  ) { }
 
 
   drop(event: CdkDragDrop<string[]>) {
@@ -53,7 +56,9 @@ export class AppointmentListComponent{
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed -', result);
-      // this.animal = result;
+      this.appointments[result.hour] = result.appointment
+      console.log(this.appointments);
+      this.cdr.markForCheck();
     });
   }
 
