@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogAddUiComponent } from './dialog-add-ui/dialog-add-ui.component';
+import { DayAppointments } from 'src/app/service/calendar.service';
 
 export interface DialogData {
   hour: number;
@@ -21,17 +22,16 @@ export interface DialogData {
 })
 export class AppointmentListComponent{
 
-  public hour: number = 15
   public appointment!: string
-  public appointments = new Array(24)
 
-  // @Input() public dayAppointments!: Appointments[]
-  @Input() public hoursAppointment!: []
+  @Input() public appointments!: Array<string | null>
 
+  @Output()
+  public saveDey: EventEmitter<Array<string | null>> = new EventEmitter<Array<string | null>>()
 
   public get hoursCaption() {
     const arr = []
-    for (let i = 0; i <= 23; i++) {
+    for (let i = 0; i <= this.appointments.length - 1; i++) {
       arr.push(i)
     }
     return arr
@@ -45,20 +45,20 @@ export class AppointmentListComponent{
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.appointments, event.previousIndex, event.currentIndex);
+    this.saveDey.emit(this.appointments)
   }
 
   openDialog(item: number): void {
-    console.log('openDialog', item);
-
     const dialogRef = this.dialog.open(DialogAddUiComponent, {
       data: {hour: item, appointment: this.appointment},
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed -', result);
+      if(!result) return
+
       this.appointments[result.hour] = result.appointment
-      console.log(this.appointments);
       this.cdr.markForCheck();
+      this.saveDey.emit(this.appointments)
     });
   }
 
